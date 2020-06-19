@@ -1,0 +1,17 @@
+const express = require('express')
+// import express from "express";
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => res.send('Hello World!'))
+
+var server = app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
+// server.close()
+
+process.on('SIGTERM', () => {
+    console.info('SIGTERM signal received.');
+    console.log('Closing http server.');
+    server.close(() => {
+      console.log('Http server closed.');
+    });
+  });
