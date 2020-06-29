@@ -1,7 +1,8 @@
 // const MongoClient = require('mongodb').MongoClient;
 import { MongoClient, Db } from 'mongodb';
 
-const URL = 'mongodb+srv://mongodb-tests:bC1tkLGjfwMtesk4@promod.9li7r.mongodb.net/test?retryWrites=true&w=majority';
+// const URL = 'mongodb+srv://mongodb-tests:bC1tkLGjfwMtesk4@promod.9li7r.mongodb.net/test?retryWrites=true&w=majority';
+const URL = 'mongodb+srv://mongodb-tests:bC1tkLGjfwMtesk4@promod-poc.9li7r.azure.mongodb.net/test?retryWrites=true&w=majority';
 const DATABASE = 'fastdata'
 const PRODUCT_COLLECTION = 'product'
 
