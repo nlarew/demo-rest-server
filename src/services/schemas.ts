@@ -1,5 +1,5 @@
-export const RecipeSchema = {
-    name: 'Recipe',
+export const ReceiptSchema = {
+    name: 'Receipt',
     properties: {
         _id: 'objectId',
         cashRegister: 'string',

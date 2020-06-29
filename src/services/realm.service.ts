@@ -1,5 +1,5 @@
 const Realm = require("realm")
-import { RecipeSchema } from './schemas'
+import { ReceiptSchema } from './schemas'
 // const ObjectId = require('bson').ObjectId;
 import { ObjectId } from 'bson'
 
@@ -30,6 +30,7 @@ export class RealmService {
         let realm = this._realms[partition];
         if (!realm) {
             realm = await this._getRealm(partition);
+            this._realms[partition] = realm;
         }
         return realm;
     }
@@ -42,7 +43,7 @@ export class RealmService {
 
 
         const config = {
-            schema: [RecipeSchema],
+            schema: [ReceiptSchema],
             sync: {
                 user,
                 partitionValue: partition
@@ -56,15 +57,49 @@ export class RealmService {
         return realm
     }
 
-    public addRecipe(body: any) {
+    public addReceipt(body: any) {
         this.getRealm('store=' + body.store).then(realm => {
             console.log(body);
             realm.write(() => {
-                const recipe = realm.create("Recipe", { ...body, "_id": new ObjectId() })
+                const recipe = realm.create("Receipt", { ...body, "_id": new ObjectId() })
             });
             realm.syncSession.uploadAllLocalChanges();
         });
     }
 
+    public async getReceipts(store: string) {
+        const realm = await this.getRealm('store=' + store);
+        realm.syncSession.downloadAllServerChanges();
+        const realmReceipts = realm.objects("Receipt");
+        const receipts = realmReceipts.map( realmReceipt => {
+            return this.realmReceiptToJSON(realmReceipt);
+        })
+        return receipts;
+    }
+
+    realmReceiptToJSON(realmObj){
+        const receipt = {
+                _id: realmObj._id,
+                cashRegister: realmObj.cashRegister,
+                saleDate: realmObj.saleDate,
+                items: [] as any,
+                store: realmObj.store,
+                customer: {
+                    firstname: realmObj.customer.firstname,
+                    lastname: realmObj.customer.lastname,
+                }
+            };
+        realmObj.items.forEach(realmItem => {
+            const item = {
+                id: realmItem.id,
+                quantity: realmItem.quantity,
+                price: realmItem.price,
+                name: realmItem.name
+            };
+            receipt.items.push(item);
+        });
+
+            return receipt;
+    };
 
 }

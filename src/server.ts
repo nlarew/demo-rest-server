@@ -30,8 +30,16 @@ app.get('/products/:count', (req: any, res: any) => {
   // res.send('Hello World!' + req.params.count)
 });
 
-app.post('/recipe', (req: any, res: any) => {
-  realmService.addRecipe(req.body);
+app.get('/receipts/:store', async (req: any, res: any) => {
+  const receipts = await realmService.getReceipts(req.params.store);
+  console.dir(receipts);
+  res.status(200);
+  res.json(receipts).
+  res.send();
+});
+
+app.post('/receipt', (req: any, res: any) => {
+  realmService.addReceipt(req.body);
   res.status(200);
   res.send();
   /*
