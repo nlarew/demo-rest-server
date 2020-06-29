@@ -26,3 +26,33 @@ export const ReceiptSchema = {
     },
     primaryKey: '_id'
 };
+
+export const OrderSchema = {
+    name: 'Order',
+    properties: {
+        _id: 'objectId',
+        orderDate: 'date',
+        store: 'string',
+        items: {
+            name: 'Article',
+            type: 'list',
+            objectType: 'object',
+            properties: {
+                id: 'string?',
+                name: 'string?',
+                description: 'string?',
+                quantity: 'int?',
+                price: 'double?',
+                color: 'string?'
+            }
+        },
+        customer: {
+            name: 'Client',
+            properties: {
+                firstname: 'string?',
+                lastname: 'string?'
+            }
+        },
+    },
+    primaryKey: '_id'
+};

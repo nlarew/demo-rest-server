@@ -1,7 +1,7 @@
 const Realm = require("realm")
-import { ReceiptSchema } from './schemas'
+import { ReceiptSchema, OrderSchema } from './schemas'
 // const ObjectId = require('bson').ObjectId;
-import { ObjectId } from 'bson'
+import { ObjectId, ObjectID } from 'bson'
 
 export class RealmService {
 
@@ -43,7 +43,7 @@ export class RealmService {
 
 
         const config = {
-            schema: [ReceiptSchema],
+            schema: [ReceiptSchema, OrderSchema],
             sync: {
                 user,
                 partitionValue: partition
@@ -67,15 +67,94 @@ export class RealmService {
         });
     }
 
+    public addOrder(body: any) {
+        this.getRealm('store=' + body.store).then(realm => {
+            console.log(body);
+            realm.write(() => {
+                const order = realm.create("Order", { ...body, "_id": new ObjectId() })
+            });
+            realm.syncSession.uploadAllLocalChanges();
+        });
+    }
+
     public async getReceipts(store: string) {
         const realm = await this.getRealm('store=' + store);
         realm.syncSession.downloadAllServerChanges();
-        const realmReceipts = realm.objects("Receipt");
+        const realmReceipts = realm.objects("Receipt").sorted('saleDate', true);
         const receipts = realmReceipts.map( realmReceipt => {
             return this.realmReceiptToJSON(realmReceipt);
         })
         return receipts;
     }
+
+    public async getOrders(store: string) {
+        const realm = await this.getRealm('store=' + store);
+        realm.syncSession.downloadAllServerChanges();
+        const realmOrders = realm.objects("Order").sorted('orderDate', true);
+        const orders = realmOrders.map( realmReceipt => {
+            return this.realmOrderToJSON(realmReceipt);
+        })
+        return orders;
+    }
+
+    public async getOrder(store: string, orderId: ObjectId) {
+        const realm = await this.getRealm('store=' + store);
+        realm.syncSession.downloadAllServerChanges();
+        let realmOrder = realm.objects("Order").filtered("_id = $0", new ObjectId(orderId) );
+        console.log('SIZE=' + realmOrder.length)
+        if(realmOrder.length > 0){
+            realmOrder = realmOrder[0];
+            const order = this.realmOrderToJSON(realmOrder);
+            return order;
+        }
+        return {};
+    }
+
+    public async deleteOrder(store: string, orderId: ObjectId) {
+        const realm = await this.getRealm('store=' + store);
+        realm.syncSession.downloadAllServerChanges();
+        let realmOrder = realm.objects("Order").filtered("_id = $0", new ObjectId(orderId) );
+        console.log('SIZE=' + realmOrder.length)
+        if(realmOrder.length > 0){
+            realmOrder = realmOrder[0];
+            realm.delete(realmOrder);
+            realm.syncSession.uploadAllLocalChanges();
+        }
+    }
+
+    realmOrderToJSON(realmObj){
+        const order = {
+                _id: realmObj._id,
+                orderDate: realmObj.orderDate,
+                items: [] as any,
+                store: realmObj.store,
+                customer: {
+                    firstname: '',
+                    lastname: '',
+                }
+            };
+            if(realmObj.customer){
+                if(realmObj.customer.firstname){
+                    order.customer.firstname = realmObj.customer.firstname;
+                }
+                if(realmObj.customer.lastname){
+                    order.customer.lastname = realmObj.customer.lastname;
+                }
+            }
+        realmObj.items.forEach(realmItem => {
+            const item = {
+                id: realmItem.id,
+                quantity: realmItem.quantity,
+                price: realmItem.price,
+                name: realmItem.name,
+                description: realmItem.description,
+                color: realmItem.color
+            };
+            order.items.push(item);
+        });
+
+            return order;
+    };
 
     realmReceiptToJSON(realmObj){
         const receipt = {
@@ -85,10 +164,18 @@ export class RealmService {
                 items: [] as any,
                 store: realmObj.store,
                 customer: {
-                    firstname: realmObj.customer.firstname,
-                    lastname: realmObj.customer.lastname,
+                    firstname: '',
+                    lastname: '',
                 }
             };
+            if(realmObj.customer){
+                if(realmObj.customer.firstname){
+                    receipt.customer.firstname = realmObj.customer.firstname;
+                }
+                if(realmObj.customer.lastname){
+                    receipt.customer.lastname = realmObj.customer.lastname;
+                }
+            }
         realmObj.items.forEach(realmItem => {
             const item = {
                 id: realmItem.id,

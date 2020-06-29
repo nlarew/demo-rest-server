@@ -30,6 +30,21 @@ app.get('/products/:count', (req: any, res: any) => {
   // res.send('Hello World!' + req.params.count)
 });
 
+app.get('/orders/:store', async (req: any, res: any) => {
+  const orders = await realmService.getOrders(req.params.store);
+  console.dir(orders);
+  res.status(200);
+  res.json(orders).
+  res.send();
+});
+
+app.get('/order/:store/:orderId', async (req: any, res: any) => {
+  const order = await realmService.getOrder(req.params.store, req.params.orderId);
+  res.status(200);
+  res.json(order).
+  res.send();
+});
+
 app.get('/receipts/:store', async (req: any, res: any) => {
   const receipts = await realmService.getReceipts(req.params.store);
   console.dir(receipts);
@@ -37,6 +52,19 @@ app.get('/receipts/:store', async (req: any, res: any) => {
   res.json(receipts).
   res.send();
 });
+
+app.delete('/order/:store/:orderId', async (req: any, res: any) => {
+  await realmService.deleteOrder(req.params.store, req.params.orderId);
+  res.status(200);
+  res.send();
+});
+
+app.post('/order', (req: any, res: any) => {
+  realmService.addOrder(req.body);
+  res.status(200);
+  res.send();
+});
+
 
 app.post('/receipt', (req: any, res: any) => {
   realmService.addReceipt(req.body);

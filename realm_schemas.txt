@@ -62,3 +62,63 @@
   ],
   "title": "Recipe"
 }
+
+{
+  "properties": {
+    "_id": {
+      "bsonType": "objectId"
+    },
+    "orderDate": {
+      "bsonType": "date"
+    },
+    "store": {
+      "bsonType": "string"
+    },
+    "customer": {
+      "title": "Customer",
+      "bsonType": "object",
+      "properties": {
+        "firstname": {
+          "bsonType": "string"
+        },
+        "lastname": {
+          "bsonType": "string"
+        }
+      }
+    },
+    "items": {
+      "bsonType": "array",
+      "items": {
+        "title": "Article",
+        "bsonType": "object",
+        "properties": {
+          "id": {
+            "bsonType": "string"
+          },
+          "quantity": {
+            "bsonType": "int"
+          },
+          "price": {
+            "bsonType": "double"
+          },
+          "name": {
+            "bsonType": "string"
+          },
+          "description": {
+            "bsonType": "string"
+          }          
+        }
+      }
+    },
+    "_partition": {
+      "bsonType": "string"
+    }
+  },
+  "required": [
+    "_id",
+    "orderDate",
+    "store",
+    "_partition"
+  ],
+  "title": "Order"
+}
