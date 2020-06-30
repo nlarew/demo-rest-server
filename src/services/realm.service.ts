@@ -117,7 +117,9 @@ export class RealmService {
         console.log('SIZE=' + realmOrder.length)
         if(realmOrder.length > 0){
             realmOrder = realmOrder[0];
-            realm.delete(realmOrder);
+            realm.write(() => {
+                realm.delete(realmOrder)
+            })
             realm.syncSession.uploadAllLocalChanges();
         }
     }
