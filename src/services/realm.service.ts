@@ -110,6 +110,18 @@ export class RealmService {
         return {};
     }
 
+    public async getReceipt(store: string, receiptId: ObjectId) {
+        const realm = await this.getRealm('store=' + store);
+        realm.syncSession.downloadAllServerChanges();
+        let realmOrder = realm.objects("Receipt").filtered("_id = $0", new ObjectId(receiptId) );
+        if(realmOrder.length > 0){
+            realmOrder = realmOrder[0];
+            const order = this.realmReceiptToJSON(realmOrder);
+            return order;
+        }
+        return {};
+    }
+
     public async deleteOrder(store: string, orderId: ObjectId) {
         const realm = await this.getRealm('store=' + store);
         realm.syncSession.downloadAllServerChanges();
