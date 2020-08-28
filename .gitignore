@@ -1,3 +1,5 @@
 node_modules
 realm-object-server
 dist
+.DS_Store
+src/.DS_Store

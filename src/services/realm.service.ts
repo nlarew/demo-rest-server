@@ -13,7 +13,7 @@ export class RealmService {
     }
 
     private _getApp() {
-        const appId = 'promod-poc-mjqwd' // 'default-xmwxi';
+        const appId = 'prodmodtest3-pakgh' // 'default-xmwxi';
         const appConfig = {
             id: appId,
             url: 'https://realm.mongodb.com', // 'http://localhost:8080',
@@ -161,7 +161,7 @@ export class RealmService {
                 quantity: realmItem.quantity,
                 price: realmItem.price,
                 name: realmItem.name,
-                description: realmItem.description,
+                description2: realmItem.description2,
                 color: realmItem.color
             };
             order.items.push(item);

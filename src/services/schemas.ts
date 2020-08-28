@@ -34,20 +34,20 @@ export const OrderSchema = {
         orderDate: 'date',
         store: 'string',
         items: {
-            name: 'Article',
+            name: 'Item',
             type: 'list',
             objectType: 'object',
             properties: {
                 id: 'string?',
                 name: 'string?',
-                description: 'string?',
+                description2: 'string?',
                 quantity: 'int?',
                 price: 'double?',
                 color: 'string?'
             }
         },
         customer: {
-            name: 'Client',
+            name: 'Customer',
             properties: {
                 firstname: 'string?',
                 lastname: 'string?'

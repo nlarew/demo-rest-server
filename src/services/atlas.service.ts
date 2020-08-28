@@ -2,9 +2,9 @@
 import { MongoClient, Db } from 'mongodb';
 
 // const URL = 'mongodb+srv://mongodb-tests:bC1tkLGjfwMtesk4@promod.9li7r.mongodb.net/test?retryWrites=true&w=majority';
-const URL = 'mongodb+srv://mongodb-tests:bC1tkLGjfwMtesk4@promod-poc.9li7r.azure.mongodb.net/test?retryWrites=true&w=majority';
-const DATABASE = 'fastdata'
-const PRODUCT_COLLECTION = 'product'
+const URL = 'mongodb+srv://ian2:123456!@cluster3.599ox.mongodb.net/realm?retryWrites=true&w=majority';
+const DATABASE = 'Realm'
+const PRODUCT_COLLECTION = 'Order'
 
 export class AtlasService {
 
